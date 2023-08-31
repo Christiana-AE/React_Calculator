@@ -20,3 +20,4 @@ Use Figma and Diagrams.net for wireframing
 - There are no multiple zeros before the comma
 - The format will be 0 if pressed first
 - Numbers are entered up to 16 integers long
+- Users should not be able to divide by zero

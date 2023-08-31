@@ -20,28 +20,82 @@ const App = () => {
   // Set the state for sign, num and result
   let [calc, setCalc] = useState({
     sign: "",
-    num:0,
-    res:0,
+    num: 0,
+    res: 0,
   });
 
-    // Create function to handle where number is clicked 
-    const numClickHandler = (e) => {
-      e.preventDefault();
-      const value = e.target.innerHTML;
-  
-      if (calc.num.length < 16) {
-        setCalc({
-          ...calc,
-          num:
-            calc.num === 0 && value === "0"
+  // Create function to handle where number is clicked 
+  const numClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    if (calc.num.length < 16) {
+      setCalc({
+        ...calc,
+        num:
+          calc.num === 0 && value === "0"
             ? "0"
             : calc.num % 1 === 0
-            ? Number(calc.num + value)
-            : calc.num + value,
-            res: !calc.sign ? 0 : calc.res,
-        });
-      }
-    };
+              ? Number(calc.num + value)
+              : calc.num + value,
+        res: !calc.sign ? 0 : calc.res,
+      });
+    }
+  };
+
+  // Create function to deal with comma / decimal place
+  const commaClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
+  };
+
+
+  // Create function to deal with any mathematical sign e.g. +, -, * or /
+  // The value is set as current sign value in calc object 
+
+  const signClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+
+    setCalc({
+      ...calc,
+      sign: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
+      num: 0,
+    });
+  };
+
+  // Function for equals to get result
+  // This is based on current num and res value and the sign selected
+
+
+  const equalsClickHandler =() => {
+    if(calc.sign && calc.num){
+      const math = (a, b, sign) =>
+        sign === "+"
+        ? a + b
+        : sign === "-"
+        ? a - b
+        : sign === "X"
+        ? a * b
+        : a / b;
+
+    setCalc({
+      ...calc,
+      res:
+        calc.num === "0" && calc.sign === "/"
+        ? "Can't divide with 0"
+        : math(Number(calc.res), Number(calc.num), calc.sign),
+        sign : "",
+        num : 0,
+    });
+    }
+  };
 
   return (
     <Wrapper>
@@ -56,18 +110,18 @@ const App = () => {
                 value={btn}
                 onClick={
                   btn === "C"
-                  ? resetClickHandler
-                  : btn === "+-"
-                  ? invertClickHandler
-                  : btn === "%"
-                  ? percentClickHandler
-                  : btn === "="
-                  ? equalsClickHandler
-                  : btn === "/" || btn === "X" || btn === "-" || btn === "+"
-                  ? signClickHandler
-                  : btn === "."
-                  ? commaClickHandler
-                  : numClickHandler
+                    ? resetClickHandler
+                    : btn === "+-"
+                      ? invertClickHandler
+                      : btn === "%"
+                        ? percentClickHandler
+                        : btn === "="
+                          ? equalsClickHandler
+                          : btn === "/" || btn === "X" || btn === "-" || btn === "+"
+                            ? signClickHandler
+                            : btn === "."
+                              ? commaClickHandler
+                              : numClickHandler
                 }
               />
             );
