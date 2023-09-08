@@ -1,3 +1,4 @@
+import React from "react";
 import "./ButtonBox.css";
 
 const ButtonBox = ({ children }) => {
